@@ -285,15 +285,15 @@ module.exports = (params) => {
         //FROM information_schema.processlist
         //WHERE (user = ? AND @@max_user_connections > 0) OR true`,[_cfg.user])
 
-      //_usedConns = {
-        //total: results[0].total || 0,
-        //maxAge: results[0].max_age || 0,
-        //updated: Date.now()
-      //}
+      _usedConns = {
+        total: 0,
+        maxAge: 0,
+        updated: Date.now()
+      }
 
     //} // end if refreshing cache
 
-    //return _usedConns
+    return _usedConns;
 
   } // end getTotalConnections
 
@@ -301,7 +301,7 @@ module.exports = (params) => {
   // Kill all zombie connections that are older than the threshold
   const killZombieConnections = async (timeout) => {
 
-    //let killedZombies = 0
+    let killedZombies = 0;
 
     // Hunt for zombies (just the sleeping ones that this user owns)
     //let zombies = await query(
@@ -322,7 +322,7 @@ module.exports = (params) => {
       //}
     //} // end for
 
-    //return killedZombies
+    return killedZombies;
 
   } // end killZombieConnections
 
