@@ -278,22 +278,22 @@ module.exports = (params) => {
   const getTotalConnections = async () => {
 
     // If cache is expired
-    if (Date.now()-_usedConns.updated > usedConnsFreq) {
+    //if (Date.now()-_usedConns.updated > usedConnsFreq) {
 
-      let results = await query(
-        `SELECT COUNT(ID) as total, MAX(time) as max_age
-        FROM information_schema.processlist
-        WHERE (user = ? AND @@max_user_connections > 0) OR true`,[_cfg.user])
+      //let results = await query(
+        //`SELECT COUNT(ID) as total, MAX(time) as max_age
+        //FROM information_schema.processlist
+        //WHERE (user = ? AND @@max_user_connections > 0) OR true`,[_cfg.user])
 
-      _usedConns = {
-        total: results[0].total || 0,
-        maxAge: results[0].max_age || 0,
-        updated: Date.now()
-      }
+      //_usedConns = {
+        //total: results[0].total || 0,
+        //maxAge: results[0].max_age || 0,
+        //updated: Date.now()
+      //}
 
-    } // end if refreshing cache
+    //} // end if refreshing cache
 
-    return _usedConns
+    //return _usedConns
 
   } // end getTotalConnections
 
@@ -301,28 +301,28 @@ module.exports = (params) => {
   // Kill all zombie connections that are older than the threshold
   const killZombieConnections = async (timeout) => {
 
-    let killedZombies = 0
+    //let killedZombies = 0
 
     // Hunt for zombies (just the sleeping ones that this user owns)
-    let zombies = await query(
-      `SELECT ID,time FROM information_schema.processlist
-        WHERE command = 'Sleep' AND time >= ? AND user = ?
-        ORDER BY time DESC`,
-      [!isNaN(timeout) ? timeout : 60*15, _cfg.user])
+    //let zombies = await query(
+      //`SELECT ID,time FROM information_schema.processlist
+        //WHERE command = 'Sleep' AND time >= ? AND user = ?
+        //ORDER BY time DESC`,
+      //[!isNaN(timeout) ? timeout : 60*15, _cfg.user])
 
     // Kill zombies
-    for (let i = 0; i < zombies.length; i++) {
-      try {
-        await query('KILL ?',zombies[i].ID)
-        onKill(zombies[i]) // fire onKill event
-        killedZombies++
-      } catch(e) {
+    //for (let i = 0; i < zombies.length; i++) {
+      //try {
+        //await query('KILL ?',zombies[i].ID)
+        //onKill(zombies[i]) // fire onKill event
+        //killedZombies++
+      //} catch(e) {
         // if (e.code !== 'ER_NO_SUCH_THREAD') console.log(e)
-        onKillError(e) // fire onKillError event
-      }
-    } // end for
+        //onKillError(e) // fire onKillError event
+      //}
+    //} // end for
 
-    return killedZombies
+    //return killedZombies
 
   } // end killZombieConnections
 
